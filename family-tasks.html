@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Семейная Футбольная Лига</title>
+<style>
+  :root {
+    --bg-1: #06210f;
+    --bg-2: #0c3018;
+    --panel: #123a1e;
+    --panel-border: #2f7a45;
+    --accent: #ffcc00;
+    --accent-2: #ff5fa2;
+    --accent-3: #4de6ff;
+    --accent-4: #7effa0;
+    --danger: #ff4d6d;
+    --text: #eafff0;
+    --text-dim: #a7d6b8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,0.06) 0%, transparent 55%),
+      repeating-linear-gradient(100deg, #0e3a1c 0px, #0e3a1c 60px, #123f20 60px, #123f20 120px),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    color: var(--text);
+    padding: 16px;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  /* ---------- Header ---------- */
+  header {
+    text-align: center;
+    padding: 22px 16px 26px;
+    margin-bottom: 22px;
+    background:
+      radial-gradient(circle at 50% 120%, rgba(255,255,255,0.08) 0%, transparent 30%),
+      linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
+    border: 3px solid var(--panel-border);
+    border-radius: 18px;
+    box-shadow: 0 0 0 3px #06210f inset, 0 8px 24px rgba(0,0,0,0.5), 0 0 40px rgba(126,255,160,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 130px; height: 130px;
+    border: 2px dashed rgba(255,255,255,0.15);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  header::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%;
+    width: 2px; height: 100%;
+    background: repeating-linear-gradient(180deg, rgba(255,255,255,0.15) 0 8px, transparent 8px 16px);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: clamp(24px, 5vw, 38px);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-shadow: 0 0 6px rgba(255,204,0,0.7), 0 0 22px rgba(255,204,0,0.35), 3px 3px 0 #000;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .reset-row {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .last-reset {
+    font-size: 12px;
+    color: var(--text-dim);
+    background: rgba(0,0,0,0.3);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--panel-border);
+  }
+
+  /* ---------- Buttons ---------- */
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+  }
+
+  .btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #14102b;
+    background: linear-gradient(180deg, #ffe066, var(--accent));
+    box-shadow: 0 4px 0 #b38600, 0 6px 12px rgba(0,0,0,0.4);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+  }
+  .btn:hover { filter: brightness(1.05); }
+  .btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #b38600, 0 2px 6px rgba(0,0,0,0.4);
+  }
+
+  .btn-pink {
+    background: linear-gradient(180deg, #ff8fc0, var(--accent-2));
+    box-shadow: 0 4px 0 #b83a72, 0 6px 12px rgba(0,0,0,0.4);
+    color: #2b0d1c;
+  }
+  .btn-pink:active { box-shadow: 0 1px 0 #b83a72, 0 2px 6px rgba(0,0,0,0.4); }
+
+  .btn-blue {
+    background: linear-gradient(180deg, #8fe9ff, var(--accent-3));
+    box-shadow: 0 4px 0 #1f8fa8, 0 6px 12px rgba(0,0,0,0.4);
+    color: #062028;
+  }
+  .btn-blue:active { box-shadow: 0 1px 0 #1f8fa8, 0 2px 6px rgba(0,0,0,0.4); }
+
+  .btn-green {
+    background: linear-gradient(180deg, #b2ffcb, var(--accent-4));
+    box-shadow: 0 4px 0 #2a9a54, 0 6px 12px rgba(0,0,0,0.4);
+    color: #062412;
+  }
+  .btn-green:active { box-shadow: 0 1px 0 #2a9a54, 0 2px 6px rgba(0,0,0,0.4); }
+
+  .btn-danger {
+    background: linear-gradient(180deg, #ff8b9c, var(--danger));
+    box-shadow: 0 3px 0 #a41f36, 0 4px 8px rgba(0,0,0,0.4);
+    color: #2b0208;
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 8px;
+  }
+  .btn-danger:active { box-shadow: 0 1px 0 #a41f36; transform: translateY(2px); }
+
+  .btn:disabled {
+    filter: grayscale(0.6) brightness(0.6);
+    cursor: not-allowed;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  /* ---------- Panels / Sections ---------- */
+  section.panel {
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.15)), var(--panel);
+    border: 2px solid var(--panel-border);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 22px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 16px;
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text);
+    text-shadow: 2px 2px 0 #000;
+    border-bottom: 2px dashed var(--panel-border);
+    padding-bottom: 10px;
+  }
+  .section-title .icon { font-size: 22px; filter: drop-shadow(0 0 6px rgba(255,255,255,0.4)); }
+
+  /* ---------- Members / cards grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 14px;
+  }
+
+  .member-card, .task-card, .reward-card {
+    background: linear-gradient(160deg, #1a4d2b, #0c281499);
+    border: 2px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 14px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .member-card:hover, .task-card:hover, .reward-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.5), 0 0 0 2px var(--accent-3) inset;
+  }
+
+  .member-top { display: flex; align-items: center; gap: 10px; }
+  .avatar {
+    font-size: 34px;
+    width: 52px; height: 52px;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle at 30% 30%, #2f7a45, #0c2412);
+    border-radius: 50%;
+    border: 2px solid var(--accent-3);
+    box-shadow: 0 0 10px rgba(77,230,255,0.5);
+  }
+  .member-name { font-weight: bold; font-size: 15px; letter-spacing: 0.5px; }
+  .member-rank { font-size: 11px; color: var(--text-dim); }
+
+  .xp-bar-track {
+    height: 14px;
+    border-radius: 8px;
+    background: #081c0f;
+    border: 1px solid var(--panel-border);
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+  }
+  .xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-4), var(--accent-3));
+    box-shadow: 0 0 8px rgba(77,230,255,0.7);
+    transition: width 0.4s ease;
+  }
+
+  .points-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 13px;
+  }
+
+  .remove-x {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: rgba(0,0,0,0.35);
+    color: var(--danger);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    font-size: 12px;
+    line-height: 22px;
+    text-align: center;
+    border: 1px solid var(--danger);
+  }
+  .remove-x:hover { background: var(--danger); color: #fff; }
+
+  /* ---------- Leaderboard ---------- */
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--panel-border);
+  }
+  .lb-row.top1 { border-color: #ffd54a; box-shadow: 0 0 14px rgba(255,213,74,0.35); }
+  .lb-row.top2 { border-color: #c9d3e0; box-shadow: 0 0 10px rgba(201,211,224,0.25); }
+  .lb-row.top3 { border-color: #d99a5b; box-shadow: 0 0 10px rgba(217,154,91,0.25); }
+  .lb-medal { font-size: 20px; width: 28px; text-align: center; }
+  .lb-name { flex: 1; font-weight: bold; }
+  .lb-points { color: var(--accent); font-weight: bold; }
+  .empty-msg { color: var(--text-dim); font-style: italic; font-size: 13px; padding: 6px 0; }
+
+  /* ---------- Tasks ---------- */
+  .task-card.done { opacity: 0.55; }
+  .task-card.done .task-title { text-decoration: line-through; }
+  .task-title { font-weight: bold; font-size: 15px; }
+  .task-meta { font-size: 12px; color: var(--text-dim); display: flex; justify-content: space-between; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(126,255,160,0.15);
+    color: var(--accent-4);
+    border: 1px solid var(--accent-4);
+    width: fit-content;
+  }
+  .badge.locked { background: rgba(255,77,109,0.15); color: var(--danger); border-color: var(--danger); }
+
+  /* ---------- Rewards ---------- */
+  .reward-title { font-weight: bold; font-size: 15px; }
+  .reward-cost { color: var(--accent-2); font-weight: bold; }
+  select {
+    font-family: inherit;
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: #081c0f;
+    color: var(--text);
+    border: 1px solid var(--panel-border);
+    font-size: 12px;
+  }
+
+  /* ---------- Forms ---------- */
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 2px dashed var(--panel-border);
+    align-items: center;
+  }
+  input[type="text"], input[type="number"] {
+    font-family: inherit;
+    padding: 9px 12px;
+    border-radius: 8px;
+    background: #081c0f;
+    color: var(--text);
+    border: 1px solid var(--panel-border);
+    font-size: 13px;
+  }
+  input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    outline: 2px solid var(--accent-3);
+  }
+  .grow { flex: 1; min-width: 140px; }
+  .emoji-picker { display: flex; gap: 4px; flex-wrap: wrap; max-width: 220px; }
+  .emoji-opt {
+    font-size: 18px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: #081c0f;
+    border: 1px solid var(--panel-border);
+    cursor: pointer;
+  }
+  .emoji-opt.selected { border-color: var(--accent-3); box-shadow: 0 0 8px rgba(77,230,255,0.6); }
+
+  footer {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 20px 0 6px;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <h1>⚽ Семейная Футбольная Лига ⚽</h1>
+    <div class="subtitle">Забивай голы за дела · Поднимайся в турнирной таблице · Выигрывай призы</div>
+    <div class="reset-row">
+      <span class="last-reset" id="lastResetLabel">Сброс: —</span>
+      <button class="btn btn-pink" id="resetWeekBtn">🏁 Новый тур недели</button>
+    </div>
+  </header>
+
+  <!-- MEMBERS -->
+  <section class="panel">
+    <h2 class="section-title"><span class="icon">⚽</span> Игроки команды</h2>
+    <div class="grid" id="membersGrid"></div>
+    <div class="form-row">
+      <input class="grow" type="text" id="memberNameInput" placeholder="Имя нового игрока">
+      <div class="emoji-picker" id="emojiPicker"></div>
+      <button class="btn btn-green" id="addMemberBtn">➕ Добавить игрока</button>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section class="panel">
+    <h2 class="section-title"><span class="icon">🏆</span> Турнирная таблица</h2>
+    <div id="leaderboard"></div>
+  </section>
+
+  <!-- TASKS -->
+  <section class="panel">
+    <h2 class="section-title"><span class="icon">🥅</span> Задания на тур</h2>
+    <div class="grid" id="tasksGrid"></div>
+    <div class="form-row">
+      <input class="grow" type="text" id="taskTitleInput" placeholder="Название задания">
+      <input type="number" id="taskPointsInput" placeholder="Голы" min="1" style="width:90px">
+      <select id="taskAssignSelect"></select>
+      <button class="btn btn-blue" id="addTaskBtn">➕ Добавить задание</button>
+    </div>
+  </section>
+
+  <!-- REWARDS -->
+  <section class="panel">
+    <h2 class="section-title"><span class="icon">🏆</span> Магазин призов</h2>
+    <div class="grid" id="rewardsGrid"></div>
+    <div class="form-row">
+      <input class="grow" type="text" id="rewardTitleInput" placeholder="Название приза">
+      <input type="number" id="rewardCostInput" placeholder="Стоимость" min="1" style="width:100px">
+      <button class="btn" id="addRewardBtn">➕ Добавить приз</button>
+    </div>
+  </section>
+
+  <footer>Данные хранятся локально в этом браузере · family-tasks.html</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'familyTasksAppData';
+  var EMOJI_OPTIONS = ['⚽','🥅','🧤','👟','🏃','🏃‍♀️','🎽','🧢','🏆','🟨','📣','🦵'];
+
+  var defaultData = {
+    members: [
+      { id: 'm1', name: 'Эдуард', emoji: '🧢', points: 0 },
+      { id: 'm2', name: 'Луиза', emoji: '📣', points: 0 },
+      { id: 'm3', name: 'Адам', emoji: '⚽', points: 0 },
+      { id: 'm4', name: 'Ясмин', emoji: '🎽', points: 0 },
+      { id: 'm5', name: 'Авива', emoji: '🥅', points: 0 }
+    ],
+    tasks: [
+      { id: 't1', title: 'Помыть посуду', points: 10, assignedTo: 'any', completed: false, completedBy: null },
+      { id: 't2', title: 'Убрать в комнате', points: 15, assignedTo: 'any', completed: false, completedBy: null },
+      { id: 't3', title: 'Сделать домашку', points: 20, assignedTo: 'any', completed: false, completedBy: null }
+    ],
+    rewards: [
+      { id: 'r1', title: 'Час игр на планшете', cost: 50 },
+      { id: 'r2', title: 'Поход за мороженым', cost: 80 },
+      { id: 'r3', title: 'Выбор фильма на вечер', cost: 30 }
+    ],
+    lastReset: null
+  };
+
+  var data = load();
+  var selectedEmoji = EMOJI_OPTIONS[0];
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return JSON.parse(JSON.stringify(defaultData));
+      var parsed = JSON.parse(raw);
+      if (!parsed.members || !parsed.tasks || !parsed.rewards) throw new Error('bad shape');
+      return parsed;
+    } catch (e) {
+      return JSON.parse(JSON.stringify(defaultData));
+    }
+  }
+
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function uid(prefix) {
+    return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  function memberName(id) {
+    var m = data.members.filter(function (x) { return x.id === id; })[0];
+    return m ? m.name : null;
+  }
+
+  function xpPercent(points) {
+    var pct = (points % 100);
+    if (points > 0 && pct === 0) pct = 100;
+    return pct;
+  }
+
+  // ---------- RENDER: MEMBERS ----------
+  function renderMembers() {
+    var grid = document.getElementById('membersGrid');
+    grid.innerHTML = '';
+    if (data.members.length === 0) {
+      grid.innerHTML = '<div class="empty-msg">Пока нет героев. Добавь первого!</div>';
+    }
+    data.members.forEach(function (m) {
+      var card = document.createElement('div');
+      card.className = 'member-card';
+      card.innerHTML =
+        '<button class="remove-x" title="Удалить героя" data-id="' + m.id + '">✕</button>' +
+        '<div class="member-top">' +
+          '<div class="avatar">' + m.emoji + '</div>' +
+          '<div>' +
+            '<div class="member-name">' + escapeHtml(m.name) + '</div>' +
+            '<div class="member-rank">Уровень ' + (Math.floor(m.points / 100) + 1) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="xp-bar-track"><div class="xp-bar-fill" style="width:' + xpPercent(m.points) + '%"></div></div>' +
+        '<div class="points-tag">⚽ ' + m.points + ' баллов</div>';
+      grid.appendChild(card);
+    });
+
+    grid.querySelectorAll('.remove-x').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-id');
+        var name = memberName(id) || 'героя';
+        if (!confirm('Удалить ' + name + '? Это действие нельзя отменить.')) return;
+        data.members = data.members.filter(function (x) { return x.id !== id; });
+        data.tasks.forEach(function (t) {
+          if (t.assignedTo === id) t.assignedTo = 'any';
+          if (t.completedBy === id) t.completedBy = null;
+        });
+        save();
+        renderAll();
+      });
+    });
+  }
+
+  // ---------- RENDER: LEADERBOARD ----------
+  function renderLeaderboard() {
+    var box = document.getElementById('leaderboard');
+    box.innerHTML = '';
+    if (data.members.length === 0) {
+      box.innerHTML = '<div class="empty-msg">Нет героев для рейтинга.</div>';
+      return;
+    }
+    var sorted = data.members.slice().sort(function (a, b) { return b.points - a.points; });
+    var medals = ['🥇', '🥈', '🥉'];
+    sorted.forEach(function (m, i) {
+      var row = document.createElement('div');
+      row.className = 'lb-row' + (i < 3 ? ' top' + (i + 1) : '');
+      row.innerHTML =
+        '<div class="lb-medal">' + (medals[i] || ('#' + (i + 1))) + '</div>' +
+        '<div class="avatar" style="width:36px;height:36px;font-size:20px;">' + m.emoji + '</div>' +
+        '<div class="lb-name">' + escapeHtml(m.name) + '</div>' +
+        '<div class="lb-points">⚽ ' + m.points + '</div>';
+      box.appendChild(row);
+    });
+  }
+
+  // ---------- RENDER: TASKS ----------
+  function renderTaskAssignSelect() {
+    var sel = document.getElementById('taskAssignSelect');
+    var current = sel.value;
+    sel.innerHTML = '<option value="any">Любой участник</option>';
+    data.members.forEach(function (m) {
+      var opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = m.emoji + ' ' + m.name;
+      sel.appendChild(opt);
+    });
+    if (current) sel.value = current;
+  }
+
+  function renderTasks() {
+    var grid = document.getElementById('tasksGrid');
+    grid.innerHTML = '';
+    if (data.tasks.length === 0) {
+      grid.innerHTML = '<div class="empty-msg">Заданий пока нет.</div>';
+    }
+    data.tasks.forEach(function (t) {
+      var assignedLabel = t.assignedTo === 'any'
+        ? 'Любой герой'
+        : (memberName(t.assignedTo) || 'Любой герой');
+      var card = document.createElement('div');
+      card.className = 'task-card' + (t.completed ? ' done' : '');
+      var doneBy = t.completed && t.completedBy ? (' · выполнил(а) ' + escapeHtml(memberName(t.completedBy) || '?')) : '';
+      card.innerHTML =
+        '<button class="remove-x" title="Удалить задание" data-id="' + t.id + '">✕</button>' +
+        '<div class="task-title">' + escapeHtml(t.title) + '</div>' +
+        '<div class="task-meta"><span>🎯 ' + escapeHtml(assignedLabel) + '</span><span class="points-tag">⚽ ' + t.points + '</span></div>' +
+        '<span class="badge ' + (t.completed ? 'locked' : '') + '">' + (t.completed ? 'Выполнено' + doneBy : 'Доступно') + '</span>' +
+        (t.completed
+          ? '<button class="btn" disabled>✔️ Готово</button>'
+          : ('<button class="btn btn-green complete-btn" data-id="' + t.id + '">✅ Выполнено</button>'));
+      grid.appendChild(card);
+    });
+
+    grid.querySelectorAll('.complete-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-id');
+        completeTask(id);
+      });
+    });
+    grid.querySelectorAll('.remove-x').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-id');
+        data.tasks = data.tasks.filter(function (x) { return x.id !== id; });
+        save();
+        renderAll();
+      });
+    });
+  }
+
+  function completeTask(taskId) {
+    var task = data.tasks.filter(function (t) { return t.id === taskId; })[0];
+    if (!task || task.completed) return;
+
+    var performerId = task.assignedTo;
+    if (performerId === 'any') {
+      if (data.members.length === 0) { alert('Сначала добавь героя.'); return; }
+      var options = data.members.map(function (m, i) { return (i + 1) + '. ' + m.name; }).join('\n');
+      var input = prompt('Кто выполнил задание "' + task.title + '"?\n' + options + '\n\nВведи номер:');
+      if (input === null) return;
+      var idx = parseInt(input, 10) - 1;
+      if (isNaN(idx) || idx < 0 || idx >= data.members.length) { alert('Неверный выбор.'); return; }
+      performerId = data.members[idx].id;
+    }
+
+    var member = data.members.filter(function (m) { return m.id === performerId; })[0];
+    if (!member) { alert('Участник не найден.'); return; }
+
+    member.points += task.points;
+    task.completed = true;
+    task.completedBy = performerId;
+    save();
+    renderAll();
+  }
+
+  // ---------- RENDER: REWARDS ----------
+  function renderRewards() {
+    var grid = document.getElementById('rewardsGrid');
+    grid.innerHTML = '';
+    if (data.rewards.length === 0) {
+      grid.innerHTML = '<div class="empty-msg">Наград пока нет.</div>';
+    }
+    data.rewards.forEach(function (r) {
+      var card = document.createElement('div');
+      card.className = 'reward-card';
+      var memberOptions = data.members.map(function (m) {
+        return '<option value="' + m.id + '">' + m.emoji + ' ' + m.name + ' (⚽' + m.points + ')</option>';
+      }).join('');
+      card.innerHTML =
+        '<button class="remove-x" title="Удалить награду" data-id="' + r.id + '">✕</button>' +
+        '<div class="reward-title">🎁 ' + escapeHtml(r.title) + '</div>' +
+        '<div class="reward-cost">⚽ ' + r.cost + ' баллов</div>' +
+        '<select class="redeem-select" data-id="' + r.id + '">' + (memberOptions || '<option value="">Нет героев</option>') + '</select>' +
+        '<button class="btn btn-pink redeem-btn" data-id="' + r.id + '"' + (data.members.length === 0 ? ' disabled' : '') + '>💫 Обменять</button>';
+      grid.appendChild(card);
+    });
+
+    grid.querySelectorAll('.redeem-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-id');
+        var select = grid.querySelector('.redeem-select[data-id="' + id + '"]');
+        redeemReward(id, select.value);
+      });
+    });
+    grid.querySelectorAll('.remove-x').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-id');
+        data.rewards = data.rewards.filter(function (x) { return x.id !== id; });
+        save();
+        renderAll();
+      });
+    });
+  }
+
+  function redeemReward(rewardId, memberId) {
+    var reward = data.rewards.filter(function (r) { return r.id === rewardId; })[0];
+    var member = data.members.filter(function (m) { return m.id === memberId; })[0];
+    if (!reward || !member) return;
+    if (member.points < reward.cost) {
+      alert(member.name + ' не хватает баллов: нужно ' + reward.cost + ', а есть ' + member.points + '.');
+      return;
+    }
+    member.points -= reward.cost;
+    save();
+    renderAll();
+    alert('🎉 ' + member.name + ' получает награду: ' + reward.title + '!');
+  }
+
+  // ---------- FORMS ----------
+  function renderEmojiPicker() {
+    var box = document.getElementById('emojiPicker');
+    box.innerHTML = '';
+    EMOJI_OPTIONS.forEach(function (e) {
+      var span = document.createElement('span');
+      span.className = 'emoji-opt' + (e === selectedEmoji ? ' selected' : '');
+      span.textContent = e;
+      span.addEventListener('click', function () {
+        selectedEmoji = e;
+        renderEmojiPicker();
+      });
+      box.appendChild(span);
+    });
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = String(str);
+    return div.innerHTML;
+  }
+
+  document.getElementById('addMemberBtn').addEventListener('click', function () {
+    var input = document.getElementById('memberNameInput');
+    var name = input.value.trim();
+    if (!name) { alert('Введи имя героя.'); return; }
+    data.members.push({ id: uid('m'), name: name, emoji: selectedEmoji, points: 0 });
+    input.value = '';
+    save();
+    renderAll();
+  });
+
+  document.getElementById('addTaskBtn').addEventListener('click', function () {
+    var titleInput = document.getElementById('taskTitleInput');
+    var pointsInput = document.getElementById('taskPointsInput');
+    var assignSelect = document.getElementById('taskAssignSelect');
+    var title = titleInput.value.trim();
+    var points = parseInt(pointsInput.value, 10);
+    if (!title) { alert('Введи название задания.'); return; }
+    if (!points || points <= 0) { alert('Укажи баллы (больше 0).'); return; }
+    data.tasks.push({
+      id: uid('t'),
+      title: title,
+      points: points,
+      assignedTo: assignSelect.value || 'any',
+      completed: false,
+      completedBy: null
+    });
+    titleInput.value = '';
+    pointsInput.value = '';
+    save();
+    renderAll();
+  });
+
+  document.getElementById('addRewardBtn').addEventListener('click', function () {
+    var titleInput = document.getElementById('rewardTitleInput');
+    var costInput = document.getElementById('rewardCostInput');
+    var title = titleInput.value.trim();
+    var cost = parseInt(costInput.value, 10);
+    if (!title) { alert('Введи название награды.'); return; }
+    if (!cost || cost <= 0) { alert('Укажи стоимость (больше 0).'); return; }
+    data.rewards.push({ id: uid('r'), title: title, cost: cost });
+    titleInput.value = '';
+    costInput.value = '';
+    save();
+    renderAll();
+  });
+
+  document.getElementById('resetWeekBtn').addEventListener('click', function () {
+    if (!confirm('Начать новую неделю? Баллы всех героев обнулятся, задания снова станут доступны.')) return;
+    data.members.forEach(function (m) { m.points = 0; });
+    data.tasks.forEach(function (t) { t.completed = false; t.completedBy = null; });
+    data.lastReset = new Date().toISOString();
+    save();
+    renderAll();
+  });
+
+  function renderLastReset() {
+    var label = document.getElementById('lastResetLabel');
+    if (!data.lastReset) {
+      label.textContent = 'Сброс: ещё не выполнялся';
+      return;
+    }
+    var d = new Date(data.lastReset);
+    label.textContent = 'Последний сброс: ' + d.toLocaleDateString('ru-RU') + ' ' + d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function renderAll() {
+    renderMembers();
+    renderLeaderboard();
+    renderTaskAssignSelect();
+    renderTasks();
+    renderRewards();
+    renderLastReset();
+  }
+
+  renderEmojiPicker();
+  renderAll();
+})();
+</script>
+</body>
+</html>
